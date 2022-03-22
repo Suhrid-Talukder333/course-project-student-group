@@ -1,0 +1,64 @@
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing:border-box;
+}
+
+.box2
+{
+    height: 300px;
+    width: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color:rgb(102, 199, 170);
+    margin-left: 100px;
+    margin-right: 100px;
+    margin-top: 100px;
+
+
+}
+.title
+{
+    padding: 5px;
+}
+.btn
+{
+    height: auto;
+    margin-top: 40px;
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    flex-direction: row;
+    width: 400px;
+
+}
+button
+{
+    padding: 10px 30px;
+    font-size: 15px;
+    font-weight: bolder;
+    background-color: rgb(51, 155, 37);
+    border:0px solid greenyellow;
+    color: white;
+    text-shadow: 1px 1px 2px black;
+    box-shadow: 1px 1px 3px black;
+    border-radius: 5px;
+    width: 133px;
+    overflow: hidden;
+}
+.but
+{
+    padding: 10px 30px;
+    font-size: 15px;
+    font-weight: bolder;
+    background-color: cadetblue;
+    border:1px solid greenyellow;
+    color: white;
+    text-shadow: 1px 1px 2px black;
+    box-shadow: 1px 2px 5px greenyellow;
+    border-radius: 5px;
+    width: 133px;
+    overflow: hidden;
+}
