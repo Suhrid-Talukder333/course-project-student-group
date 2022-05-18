@@ -7,6 +7,7 @@ export default function Tcard(props) {
         <div className="title">{props.title}</div>
         <div className="code">{props.code}</div>
         <div className="credit">Credit-{props.credit}</div>
+        <div className="">Teacher-{props.teacher}</div>
         <div className="btn">
         <button>Add Resource</button>
         <Link to='/Tclasstime'>

@@ -3,16 +3,10 @@
     padding: 0;
     box-sizing: border-box;
 }
-body
-{
-    background-color: rgb(35, 78, 65);
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100vw;
 
+.body {
+    display: flex;
+    flex-direction: column;
 }
 
 .text
@@ -22,7 +16,7 @@ body
             font-family:Georgia, 'Times New Roman', Times, serif;
             font-weight: 800;
             font-size: 3rem;
-            color: rgb(107, 243, 29);
+            color: rgb(29, 61, 243);
             animation: text1 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite alternate both;
         }
         @keyframes text1 
@@ -37,15 +31,15 @@ body
             {
                 transform: translateY(-30px);
                 transform-origin: 50% 50%;
-                text-shadow: 0 1px 0  rgb(179, 212, 141),
-                0 2px 0 rgb(155, 187, 118),
-                0 3px 0 rgb(191, 212, 166),
-                0 4px 0  rgb(207, 236, 174),
-                0 5px 0  rgb(217, 245, 186),
-                0 6px 0  rgb(164, 192, 132),
-                0 7px 0  rgb(205, 230, 176),
-                0 8px 0  rgb(198, 226, 166),
-                0 9px 0  rgb(180, 209, 147), 0 50px 30px rgba(0, 0,0,0.3);
+                text-shadow: 0 1px 0  rgb(12, 20, 2),
+                0 2px 0 rgb(12, 20, 2),
+                0 3px 0 rgb(12, 20, 2),
+                0 4px 0  rgb(12, 20, 2),
+                0 5px 0  rgb(12, 20, 2),
+                0 6px 0  rgb(12, 20, 2),
+                0 7px 0  rgb(12, 20, 2),
+                0 8px 0  rgb(12, 20, 2),
+                0 9px 0  rgb(12, 20, 2), 0 50px 30px rgba(0, 0,0,0.3);
             }
         }
 .log{
@@ -56,19 +50,22 @@ body
     height: 50px;
 }
 .button{
-
     text-decoration: none;
     height: auto;
     width: auto;
     padding: 10px 40px;
     border-radius: 7px;
-    background-color:#006666;
+    background-color:#2eb19a;
     font-size: 15px;
     font-weight: bold;
     color: white;
     border: none;
-    transition-duration: 1s;
-    box-shadow: 2px 2px 5px black,-2px -2px 5px black;
-    
+    transition-duration: 1s; 
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color:white;
+    color:#2eb19a;
 }
 

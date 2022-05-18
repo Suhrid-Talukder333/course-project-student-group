@@ -4,16 +4,6 @@
     padding: 0;
     box-sizing: border-box;
 }
-body
-{
-background-color:rgb(35, 78, 65) ;
-display: flex;
-align-items: center;
-justify-content: center;
-height: 100%;
-
-
-}
 .form
 {
 height: 350px;
@@ -54,7 +44,7 @@ input
 .Button 
 {
    margin-top: 15px;
-   background-color:#006666;
+   background-color:#2eb19a;
    font-size: 15px;
    font-weight: bolder;
    color: white;
