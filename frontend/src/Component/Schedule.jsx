@@ -1,97 +1,223 @@
-import React, { useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import * as React from "react";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import { CardActions, Button, Modal } from "@mui/material";
+import Student from "../assets/student.png";
+import Teacher from "../assets/teacher.png";
+import styled from "styled-components";
+import { Container, TextField } from "@material-ui/core";
+import { Box } from "@mui/material";
+import EditModal from "./EditModal";
+import { useNavigate } from 'react-router-dom';
 
-// fake data generator
-const getItems = (count) =>
-  Array.from({ length: count }, (v, k) => k).map((k) => ({
-    id: `CSTE-220${k}`,
-    content: `CSTE 220${k}`,
-  }));
+const StyledContainer = styled.div`
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  flex-wrap: wrap;
+  border: 1px solid #bcbabe;
+  border-radius: 8px;
+`;
 
-// a little function to help us with reordering the result
-const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
+const MediaCard = ({ course, onChange }) => {
+  const history = useNavigate();
+  const [open, setOpen] = React.useState(false);
+  const [status, setStatus] = React.useState(course?.status);
+  const [userRole, setUserRole] = React.useState(
+    JSON.parse(window.localStorage.getItem("loggedUser")).role
+  );
 
-  return result;
-};
-
-const grid = 8;
-
-const getItemStyle = (isDragging, draggableStyle) => ({
-  // some basic styles to make the items look a bit nicer
-  userSelect: "none",
-  padding: grid * 2,
-  margin: `0 ${grid}px 0 0`,
-
-  // change background colour if dragging
-  background: isDragging ? "lightgreen" : "grey",
-
-  // styles we need to apply on draggables
-  ...draggableStyle,
-});
-
-const getListStyle = (isDraggingOver) => ({
-  background: isDraggingOver ? "lightblue" : "lightgrey",
-  display: "flex",
-  padding: grid,
-  overflow: "auto",
-});
-
-const Schedule = () => {
-  const [items, setItems] = useState(getItems(6));
-
-  const onDragEnd = (result) => {
-    // dropped outside the list
-    if (!result.destination) {
-      return;
-    }
-
-    const updatedItems = reorder(
-      items,
-      result.source.index,
-      result.destination.index
-    );
-    setItems(updatedItems);
+  React.useEffect(() => {
+    setStatus(course.status);
+  }, [course, status])
+  
+  const showCourse = (e, course) => {
+    e.stopPropagation()
+    history(`/course/${course.id}`);
+  }
+    
+  const handleAttend = (e) => {
+    e.stopPropagation()
+    setStatus("attending");
+    let updatedData = { ...course };
+    updatedData.status = "attending";
+    onChange(updatedData);
   };
 
-  // Normally you would want to split things out into separate components.
-  // But in this example everything is just done in one place for simplicity
+  const handleAbsent = (e) => {
+    e.stopPropagation();
+    setStatus("dismissed");
+    let updatedData = { ...course };
+    updatedData.status = "dismissed";
+    onChange(updatedData);
+  };
+
+  const handleToggle = (e) => {
+    e.stopPropagation();
+    setOpen(!open);
+  };
+
+  const handleSave = (course) => {
+    onChange(course);
+    handleToggle();
+  };
+
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      {[1, 2, 3, 4, 5].map((n) => (
-        <Droppable droppableId="droppable" direction="horizontal">
-          {(provided, snapshot) => (
-            <div
-              ref={provided.innerRef}
-              style={getListStyle(snapshot.isDraggingOver)}
-              {...provided.droppableProps}
-            >
-              {items.map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      style={getItemStyle(
-                        snapshot.isDragging,
-                        provided.draggableProps.style
-                      )}
-                    >
-                      {item.content}{" 9.00pm"}
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      ))}
-    </DragDropContext>
+    <>
+      <Card
+        sx={{
+          width: 300,
+          padding: 3,
+          border: status && "1px solid #363237",
+          margin: 3,
+          cursor: "pointer",
+          backgroundColor:
+            status && status === "attending"
+              ? "#a1be95"
+              : status === "dismissed"
+              ? "#ed5752"
+              : "",
+        }}
+        onClick={(e) => showCourse(e, course)}
+      >
+        <CardMedia
+          component="img"
+          height="100"
+          image="https://images.unsplash.com/photo-1532975313331-cbaf920cf049?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=60&raw_url=true&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8aWxsdXN0cmF0aW9uJTIwYm9va3N8ZW58MHx8MHx8&auto=format&fit=crop&w=500"
+          alt="green iguana"
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div">
+            CSTE{course.code}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {course.name}
+          </Typography>
+          <Typography variant="h6" color="text.secondary">
+            {course.time}
+          </Typography>
+        </CardContent>
+        {userRole === "teacher" && (
+          <CardActions sx={{ display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+            <Button size="small" variant="contained" onClick={(e) => handleToggle(e)}>
+              Edit
+            </Button>
+            {!status && (
+              <>
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="success"
+                  onClick={(e) => handleAttend(e)}
+                >
+                  Attend
+                </Button>
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="error"
+                  onClick={(e) => handleAbsent(e)}
+                >
+                  Absent
+                </Button>
+              </>
+            )}
+            {status && (
+              <Typography variant="h6" color="text.secondary">
+                {status.toUpperCase()}
+              </Typography>
+            )}
+          </CardActions>
+        )}
+      </Card>
+      {open && (
+        <EditModal
+          course={course}
+          handleToggle={handleToggle}
+          onChange={handleSave}
+        />
+      )}
+    </>
   );
 };
 
-export default Schedule;
+const handleTimeStamps = (time) => {
+  let updatedTime = time.replace(" ", "").toLowerCase();
+  if (updatedTime.includes("pm")) {
+    updatedTime = updatedTime.replace("pm", "");
+    updatedTime = parseFloat(updatedTime) + 12;
+    return updatedTime;
+  } else {
+    updatedTime = updatedTime.replace("am", "");
+    updatedTime = parseFloat(updatedTime);
+    return updatedTime;
+  }
+};
+
+const scheduleSort = (courses) => {
+  let loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"));
+  let updatedData = [...courses];
+  if(loggedUser.role === "student") {
+    updatedData = updatedData.filter(item => {
+      if(item.year.toString() === loggedUser.year.toString() && item.term.toString() === loggedUser.term.toString()) {
+        return item;
+      }
+    })
+  } else if(loggedUser.role === "teacher") {
+    updatedData = updatedData.filter(item => {
+      if(item.teacher.toString() === loggedUser.name.toString()) {
+        return item;
+      }
+    })
+  }
+  updatedData.sort((a, b) => {
+    let timeA = handleTimeStamps(a.time);
+    let timeB = handleTimeStamps(b.time);
+    return timeA - timeB;
+  });
+  return updatedData;
+};
+
+export default function Schedule({ courses, onChange }) {
+  const [scheduledCourses, setScheduledCourses] = React.useState(
+    scheduleSort(courses)
+  );
+
+  React.useEffect(() => {
+    setScheduledCourses(scheduleSort(courses))
+  }, [courses])
+
+  const postCourse = async (course) => {
+    await fetch(`http://localhost:8080/course/update/${course.id}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(course),
+    }).then(() => {
+      console.log("New course added");
+    });
+  };
+
+  const handleChange = (course) => {
+    postCourse(course).then(() => {
+      let updatedCourses = [...courses];
+      updatedCourses = updatedCourses.map((item) => {
+        if (course.code === item.code) {
+          return course;
+        }
+        return item;
+      });
+      setScheduledCourses(scheduleSort(updatedCourses));
+      onChange("courses", updatedCourses);
+    });
+  };
+
+  return (
+    <StyledContainer>
+      {scheduledCourses.map((course) => (
+        <MediaCard course={course} key={course.id} onChange={handleChange} />
+      ))}
+    </StyledContainer>
+  );
+}

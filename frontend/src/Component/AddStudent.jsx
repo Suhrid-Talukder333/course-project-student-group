@@ -14,7 +14,8 @@ const useStyles = makeStyles((theme) => ({
 export default function AddStudent() {
   const paperStyle = { padding: "50px 20px", width: 600, margin: "20px auto" };
   const [name, setName] = useState("");
-  const [batch, setBatch] = useState("");
+  const [year, setYear] = useState("");
+  const [term, setTerm] = useState("");
   const [roll, setRoll] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,7 +24,7 @@ export default function AddStudent() {
 
   const handleClick = (e) => {
     e.preventDefault();
-    const student = { name, batch, password, roll, email };
+    const student = { name, year, term, password, roll, email };
     console.log(student);
     fetch("http://localhost:8080/student/add", {
       method: "POST",
@@ -67,11 +68,19 @@ export default function AddStudent() {
           />
           <TextField
             id="outlined-basic"
-            label="Student Batch"
+            label="Student Year"
             variant="outlined"
             fullWidth
-            value={batch}
-            onChange={(e) => setBatch(e.target.value)}
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+          />
+          <TextField
+            id="outlined-basic"
+            label="Student Term"
+            variant="outlined"
+            fullWidth
+            value={term}
+            onChange={(e) => setTerm(e.target.value)}
           />
           <TextField
             id="outlined-basic"

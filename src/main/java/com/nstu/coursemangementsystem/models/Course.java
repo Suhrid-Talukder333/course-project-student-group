@@ -3,7 +3,12 @@ package com.nstu.coursemangementsystem.models;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import javax.persistence.Id;
+import javax.persistence.ElementCollection;
+
+import java.util.*;
 
 @Entity
 public class Course {
@@ -17,6 +22,11 @@ public class Course {
     private String code;
     private String credit;
     private String time;
+    private String status;
+    @ElementCollection
+    private List<Integer> announcements;
+    @ElementCollection
+    private List<Integer> resources;
 
     public Course() {
     }
@@ -29,12 +39,20 @@ public class Course {
         this.id = id;
     }
 
-    public int getTime() {
-        return id;
+    public String getStatus() {
+        return status;
     }
 
-    public void setTime(int id) {
-        this.id = id;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getName() {
@@ -83,5 +101,21 @@ public class Course {
 
     public void setCredit(String credit) {
         this.credit = credit;
+    }
+
+    public List<Integer> getAnnouncements() {
+        return announcements;
+    }
+
+    public void setAnnouncements(List<Integer> announcements) {
+        this.announcements = announcements;
+    }
+
+    public List<Integer> getResources() {
+        return resources;
+    }
+
+    public void setResources(List<Integer> resources) {
+        this.resources = resources;
     }
 }

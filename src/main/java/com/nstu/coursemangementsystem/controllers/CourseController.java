@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/course")
@@ -23,5 +24,15 @@ public class CourseController {
     @GetMapping("/getAll")
     public List<Course> list(){
         return courseService.getAllCourses();
+    }
+
+    @GetMapping("/get/{id}")
+    public Course getById(@PathVariable int id) {
+        return courseService.getCourseById(id);
+    }
+
+    @PostMapping("/update/{id}")
+    public void updateById(@PathVariable int id, @RequestBody Course course) {
+        courseService.updateCourse(id, course);
     }
 }

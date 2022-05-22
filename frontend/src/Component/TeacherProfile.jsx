@@ -27,7 +27,7 @@ export default function TeacherProfile() {
       <Box>
         <Container maxWidth="xl">
           <Typography variant="h4" sx={{ mb: 5 }}>
-            Hi <span style={{ color: "blue" }}>{loggedUser.name}</span>, Welcome
+            Hi <span style={{ color: "blue" }}>{loggedUser.name} Sir</span>, Welcome
             back,
           </Typography>
         </Container>

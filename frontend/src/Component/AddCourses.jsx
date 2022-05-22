@@ -22,17 +22,16 @@ export default function AddCourses() {
     const[teacher,setTeacher]=useState('')
     const[courses,setCourses]=useState([])
     const[time, setTime]=useState("")
-    const[batch, setBatch]=useState("")
     const classes = useStyles();
 
   const handleClick=(e)=>{
     e.preventDefault()
-    const student={name,year,teacher,term,code,credit}
-    console.log(student)
+    const course={name,year,teacher,term,code,credit, time}
+    console.log(course)
     fetch("http://localhost:8080/course/add",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(student)
+      body:JSON.stringify(course)
 
   }).then(()=>{
     console.log("New course added")
@@ -82,10 +81,6 @@ useEffect(()=>{
       <TextField id="outlined-basic" label="Course Time" variant="outlined" fullWidth
       value={time}
       onChange={(e)=>setTime(e.target.value)}
-      />
-      <TextField id="outlined-basic" label="Batch" variant="outlined" fullWidth
-      value={batch}
-      onChange={(e)=>setBatch(e.target.value)}
       />
       <Button variant="contained" color="secondary" onClick={handleClick}>
   Submit

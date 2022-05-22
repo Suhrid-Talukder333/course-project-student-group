@@ -12,7 +12,8 @@ public class Student {
     private int id;
     private String name;
     private String password;
-    private String batch;
+    private String year;
+    private String term;
     private String roll;
     private String email;
 
@@ -43,12 +44,20 @@ public class Student {
         this.name = name;
     }
 
-    public String getBatch() {
-        return batch;
+    public String getYear() {
+        return year;
     }
 
-    public void setBatch(String batch) {
-        this.batch = batch;
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getTerm() {
+        return term;
+    }
+
+    public void setTerm(String term) {
+        this.term = term;
     }
 
     public String getRoll() {
