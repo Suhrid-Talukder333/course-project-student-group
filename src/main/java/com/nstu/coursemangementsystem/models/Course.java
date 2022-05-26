@@ -1,11 +1,12 @@
 package com.nstu.coursemangementsystem.models;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import javax.persistence.Id;
+import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 
 import java.util.*;
@@ -23,10 +24,11 @@ public class Course {
     private String credit;
     private String time;
     private String status;
-    @ElementCollection
-    private List<Integer> announcements;
-    @ElementCollection
-    private List<Integer> resources;
+    private String description;
+    // @ElementCollection
+    // private List<Integer> announcements;
+    // @ElementCollection
+    // private List<Integer> resources;
 
     public Course() {
     }
@@ -45,6 +47,14 @@ public class Course {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getTime() {
@@ -103,19 +113,19 @@ public class Course {
         this.credit = credit;
     }
 
-    public List<Integer> getAnnouncements() {
-        return announcements;
-    }
+    // public List<Integer> getAnnouncements() {
+    //     return announcements;
+    // }
 
-    public void setAnnouncements(List<Integer> announcements) {
-        this.announcements = announcements;
-    }
+    // public void setAnnouncements(List<Integer> announcements) {
+    //     this.announcements = announcements;
+    // }
 
-    public List<Integer> getResources() {
-        return resources;
-    }
+    // public List<Integer> getResources() {
+    //     return resources;
+    // }
 
-    public void setResources(List<Integer> resources) {
-        this.resources = resources;
-    }
+    // public void setResources(List<Integer> resources) {
+    //     this.resources = resources;
+    // }
 }

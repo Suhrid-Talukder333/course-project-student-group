@@ -28,6 +28,7 @@ export default function AccountPopover() {
   };
 
   const handleLogout = () => {
+    // window.localStorage.removeItem("loggedUser");
     history("/login");
   }
 

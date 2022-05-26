@@ -12,26 +12,41 @@ import Home from "./Component/Home";
 import SidebarLayout from "./Component/SideBarLayout";
 import Courses from "./Component/Courses";
 import User from "./Component/Users";
+import ThemeProvider from "./theme";
+import ProfileInfo from "./Component/ProfileInfo";
+import { NotificationContainer } from "react-notifications";
+import "react-notifications/lib/notifications.css";
 
 class App extends Component {
   render() {
     return (
-      <Router>
-        <Routes>
-          <Route exact path="/" element={<Home />}></Route>
-          <Route path="/login" element={<Login />}></Route>
-          <Route element={<SidebarLayout />}>
-            <Route path="/teacherProfile" element={<TeacherProfile />}></Route>
-            <Route path="/studentProfile" element={<StudentProfile />}></Route>
-            <Route path="/course/:id" element={<CourseDetails />}></Route>
-            <Route path="/courses" element={<Courses />}></Route>
-            <Route path="/users" element={<User />}></Route>
-          </Route>
-          <Route path="/addStudent" element={<AddStudent />}></Route>
-          <Route path="/addCourses" element={<AddCourses />}></Route>
-          <Route path="/addTeacher" element={<AddTeacher />}></Route>
-        </Routes>
-      </Router>
+      <ThemeProvider>
+        <Router>
+          <Routes>
+            <Route exact path="/" element={<Home />}></Route>
+            <Route path="/login" element={<Login />}></Route>
+            <Route element={<SidebarLayout />}>
+              <Route
+                path="/teacherProfile"
+                element={<TeacherProfile />}
+              ></Route>
+              <Route
+                path="/studentProfile"
+                element={<StudentProfile />}
+              ></Route>
+              <Route path="/course/:id" element={<CourseDetails />}></Route>
+              <Route path="/courses" element={<Courses />}></Route>
+              <Route path="/users" element={<User />}></Route>
+              <Route path="/user/:type/:id" element={<ProfileInfo />}></Route>
+              <Route path="/profile" element={<ProfileInfo />}></Route>
+            </Route>
+            <Route path="/addStudent" element={<AddStudent />}></Route>
+            <Route path="/addCourses" element={<AddCourses />}></Route>
+            <Route path="/addTeacher" element={<AddTeacher />}></Route>
+          </Routes>
+        </Router>
+        <NotificationContainer />
+      </ThemeProvider>
     );
   }
 }

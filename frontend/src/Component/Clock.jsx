@@ -1,11 +1,9 @@
 import { React, useState, useEffect } from "react";
 import moment from "moment";
 import styled from "styled-components";
-import { Container } from "@material-ui/core";
 
-const StyledContainer = styled(Container)`
+const StyledContainer = styled.div`
   font-family: Roboto;
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;

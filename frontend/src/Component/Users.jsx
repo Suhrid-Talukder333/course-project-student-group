@@ -1,6 +1,6 @@
 import { filter } from "lodash";
-import { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 // material
 import {
   Card,
@@ -18,29 +18,16 @@ import {
   TablePagination,
 } from "@mui/material";
 import Iconify from "./iconify";
-
-
-
-const USERLIST = [...Array(24)].map((_, index) => ({
-  id: 123,
-  avatarUrl: "https://randomuser.me/api/portraits/lego/1.jpg",
-  name: "asdasdasd",
-  company: "asdasdasd",
-  isVerified: "asdasdasd",
-  status: 'active',
-  role: 'Leader',
-}));
+import UserListHead from "./UserListHead";
+import Label from "./Label";
+import UserListToolbar from "./UserListToolbar";
 
 const TABLE_HEAD = [
   { id: "name", label: "Name", alignRight: false },
-  { id: "company", label: "Company", alignRight: false },
   { id: "role", label: "Role", alignRight: false },
-  { id: "isVerified", label: "Verified", alignRight: false },
   { id: "status", label: "Status", alignRight: false },
   { id: "" },
 ];
-
-// ----------------------------------------------------------------------
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -77,6 +64,14 @@ function applySortFilter(array, comparator, query) {
 export default function User() {
   const [page, setPage] = useState(0);
 
+  const histroy = useNavigate();
+  
+  const [students, setStudents] = useState(null);
+
+  const [teachers, setTeachers] = useState(null);
+
+  const [users, setUsers] = useState(null);
+
   const [order, setOrder] = useState("asc");
 
   const [selected, setSelected] = useState([]);
@@ -87,6 +82,54 @@ export default function User() {
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  useEffect(() => {
+    fetch("http://localhost:8080/student/getAll")
+      .then((res) => res.json())
+      .then((result) => {
+        setStudents(result);
+      });
+    fetch("http://localhost:8080/teacher/getAll")
+      .then((res) => res.json())
+      .then((result) => {
+        setTeachers(result);
+      });
+  }, []);
+
+  useEffect(() => {
+    let updatedUsers = [];
+    let updatedStudents = [];
+    let updatedTeachers = [];
+    updatedStudents =
+      students &&
+      students.map((item) => {
+        return {
+          id: item.id,
+          avatarUrl: "https://randomuser.me/api/portraits/lego/1.jpg",
+          name: item.name,
+          role: "Student",
+          status: "Active",
+        };
+      });
+    updatedTeachers =
+      teachers &&
+      teachers.map((item) => {
+        return {
+          id: item.id,
+          avatarUrl: "https://randomuser.me/api/portraits/lego/1.jpg",
+          name: item.name,
+          role: "Teacher",
+          status: "Active",
+        };
+      });
+    if (updatedStudents) {
+      updatedUsers = [...updatedStudents];
+    }
+    if (updatedTeachers) {
+      updatedUsers = [...updatedUsers, ...updatedTeachers];
+    }
+    setUsers(updatedUsers);
+  }, [students, teachers]);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -95,7 +138,7 @@ export default function User() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = users.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -133,16 +176,17 @@ export default function User() {
     setFilterName(event.target.value);
   };
 
+  const goToUser = (id, role) => {
+    histroy(`/user/${role.toLowerCase()}/${id}`);
+  }
+
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
 
-  const filteredUsers = applySortFilter(
-    USERLIST,
-    getComparator(order, orderBy),
-    filterName
-  );
+  const filteredUsers =
+    users && applySortFilter(users, getComparator(order, orderBy), filterName);
 
-  const isUserNotFound = filteredUsers.length === 0;
+  const isUserNotFound = filteredUsers && filteredUsers.length === 0;
 
   return (
     <Container>
@@ -158,67 +202,77 @@ export default function User() {
       </Stack>
 
       <Card>
+        <UserListToolbar
+          numSelected={selected.length}
+          filterName={filterName}
+          onFilterName={handleFilterByName}
+        />
 
         <>
-          <TableContainer sx={{ minWidth: 800, minHeight: "50vh"}}>
+          <TableContainer sx={{ minWidth: 800 }}>
             <Table>
+              <UserListHead
+                order={order}
+                orderBy={orderBy}
+                headLabel={TABLE_HEAD}
+                rowCount={users && users.length}
+                numSelected={selected.length}
+                onRequestSort={handleRequestSort}
+                onSelectAllClick={handleSelectAllClick}
+              />
               <TableBody>
-                {filteredUsers
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => {
-                    const {
-                      id,
-                      name,
-                      role,
-                      status,
-                      company,
-                      avatarUrl,
-                      isVerified,
-                    } = row;
-                    const isItemSelected = selected.indexOf(name) !== -1;
+                {filteredUsers &&
+                  filteredUsers
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row) => {
+                      const { id, name, role, status, avatarUrl } = row;
+                      const isItemSelected = selected.indexOf(name) !== -1;
 
-                    return (
-                      <TableRow
-                        hover
-                        key={id}
-                        tabIndex={-1}
-                        role="checkbox"
-                        selected={isItemSelected}
-                        aria-checked={isItemSelected}
-                      >
-                        <TableCell component="th" scope="row" padding="checkbox">
-                          <Stack
-                            direction="row"
-                            alignItems="center"
-                            spacing={2}
-                          >
-                            <Avatar alt={name} src={avatarUrl} />
-                            <Typography variant="subtitle2" noWrap>
-                              {name}
-                            </Typography>
-                          </Stack>
-                        </TableCell>
-                        <TableCell align="left">{company}</TableCell>
-                        <TableCell align="left">{role}</TableCell>
-                        <TableCell align="left">
-                          {isVerified ? "Yes" : "No"}
-                        </TableCell>
-                        <TableCell align="left">
-                          <span
-                            variant="ghost"
-                            color={
-                              (status === "banned" && "error") || "success"
-                            }
-                          >
-                            {status}
-                          </span>
-                        </TableCell>
-
-                        <TableCell align="right">
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
+                      return (
+                        <TableRow
+                          hover
+                          key={`${id}+${name}`}
+                          tabIndex={-1}
+                          role="checkbox"
+                          selected={isItemSelected}
+                          aria-checked={isItemSelected}
+                          style={{
+                            cursor: "pointer"
+                          }}
+                          onClick={() =>goToUser(id, role)}
+                        >
+                          <TableCell padding="checkbox" style={{visibility: "hidden"}}>
+                            <Checkbox
+                              checked={isItemSelected}
+                              onChange={(event) => handleClick(event, name)}
+                            />
+                          </TableCell>
+                          <TableCell component="th" scope="row" padding="none">
+                            <Stack
+                              direction="row"
+                              alignItems="center"
+                              spacing={2}
+                            >
+                              <Avatar alt={name} src={avatarUrl} />
+                              <Typography variant="subtitle2" noWrap>
+                                {name}
+                              </Typography>
+                            </Stack>
+                          </TableCell>
+                          <TableCell align="left">{role}</TableCell>
+                          <TableCell align="left">
+                            <Label
+                              variant="ghost"
+                              color={
+                                (status === "banned" && "error") || "success"
+                              }
+                            >
+                              {status}
+                            </Label>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
                 {emptyRows > 0 && (
                   <TableRow style={{ height: 53 * emptyRows }}>
                     <TableCell colSpan={6} />
@@ -230,6 +284,7 @@ export default function User() {
                 <TableBody>
                   <TableRow>
                     <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                      {"Nothing Found"}
                     </TableCell>
                   </TableRow>
                 </TableBody>
@@ -241,7 +296,7 @@ export default function User() {
         <TablePagination
           rowsPerPageOptions={[10, 20, 25]}
           component="div"
-          count={USERLIST.length}
+          count={users && users.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

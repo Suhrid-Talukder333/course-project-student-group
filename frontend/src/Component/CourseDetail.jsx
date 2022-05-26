@@ -16,6 +16,7 @@ import BookIcon from "@mui/icons-material/Book";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Dialogue from "./Dialogue";
 import randomColor from "randomcolor";
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 const Banner = styled.div`
   display: flex;
@@ -25,6 +26,8 @@ const Banner = styled.div`
   justify-content: space-between;
   align-items: center;
   background-image: url("https://images.unsplash.com/photo-1532975313331-cbaf920cf049?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=60&raw_url=true&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8aWxsdXN0cmF0aW9uJTIwYm9va3N8ZW58MHx8MHx8&auto=format&fit=crop&w=500");
+  border-radius: 8px;
+  box-shadow: 0px 7px 24px -3px #d9bd9aad;
 `;
 
 const DetailsContainer = styled.div`
@@ -46,20 +49,25 @@ const DescriptionContainer = styled.div`
 const CourseInfo = styled.div`
   display: flex;
   max-width: 30%;
-  border: 1px solid black;
   flex-direction: column;
-  padding: 30px;
+  padding: 20px;
   justify-content: center;
   align-items: left;
   word-wrap: break-word;
   border-radius: 8px;
+  background-color: #cbe9f085;
+  box-shadow: 0px 3px 5px -3px #2e2f2fad;
 `;
 
 const CourseLabel = styled.div`
   display: flex;
   word-wrap: break-word;
-  justify-content: start;
+  justify-content: space-between;
   align-items: center;
+  margin: 5px;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #fff;
 `;
 
 const Label = styled.span`
@@ -74,6 +82,7 @@ const Info = styled.span`
   font-size: 20px;
   word-wrap: break-word;
   margin-left: 20px;
+  text-align: right;
 `;
 
 const AnnouncementsContainer = styled.div`
@@ -126,15 +135,21 @@ const StyledAddButton = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 20px;
+  font-size: 30px;
   width: 36px;
   height: 36px;
-  border: 1px solid black;
+  padding: 10px;
   text-align: center;
   border-radius: 50%;
   cursor: pointer;
+  background: #d9bd9aad;
+  transition: all 0.5s;
+  box-shadow: 0px 4px 16px -5px #555555ab;
   &:hover {
-    background-color: grey;
+    background-color: #0cb1e4ab;
+  }
+  &:active {
+    margin-bottom: -10px;
   }
 `;
 
@@ -173,6 +188,7 @@ const CourseDetails = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(resource),
       }).then(() => {
+        NotificationManager.success('Successfully Added Resources', "Resources");
         setResources(updatedresources);
         const loggedUser = JSON.parse(
           window.localStorage.getItem("loggedUser")
@@ -198,6 +214,7 @@ const CourseDetails = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(announcement),
       }).then(() => {
+        NotificationManager.success('Successfully Added Announcement', "Announcement")
         setAnnouncements(updatedAnnouncements);
         const loggedUser = JSON.parse(
           window.localStorage.getItem("loggedUser")
@@ -251,7 +268,7 @@ const CourseDetails = () => {
             {course.name}
           </Typography>
           <Typography style={{ padding: "10px" }} variant="h6">
-            asdasdkljasdlkjaslkdjaskldjaklsdjklasjdklasjdklajsdklajsdkljaskldjaskdljaskdljaskldjasdasdkljasdlkjaslkdjaskldjaklsdjklasjdklasjdklajsdklajsdkljaskldjaskdljaskdljaskldjasdasdkljasdlkjaslkdjaskldjaklsdjklasjdklasjdklajsdklajsdkljaskldjaskdljaskdljaskldjasdasdkljasdlkjaslkdjaskldjaklsdjklasjdklasjdklajsdklajsdkljaskldjaskdljaskdljaskldjasdasdkljasdlkjaslkdjaskldjaklsdjklasjdklasjdklajsdklajsdkljaskldjaskdljaskdljaskldjasdasdkljasdlkjaslkdjaskldjaklsdjklasjdklasjdklajsdklajsdkljaskldjaskdljaskdljaskldjasdasdkljasdlkjaslkdjaskldjaklsdjklasjdklasjdklajsdklajsdkljaskldjaskdljaskdljaskldj
+            {course.description} Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
           </Typography>
         </DescriptionContainer>
         <CourseInfo>
@@ -321,7 +338,7 @@ const CourseDetails = () => {
                 })}
             </Timeline>
           )}
-          {loggedUser && loggedUser === "teacher" && (
+          {loggedUser && loggedUser.role === "teacher" && (
             <AddButtonContainer onClick={() => handleToggle("announcement")}>
               <StyledAddButton>+</StyledAddButton>
             </AddButtonContainer>

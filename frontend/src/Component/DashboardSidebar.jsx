@@ -53,7 +53,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
                 {loggedUser.name}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {loggedUser.role}
+                {loggedUser.role && loggedUser.role.toUpperCase()}
               </Typography>
             </Box>
           </AccountStyle>

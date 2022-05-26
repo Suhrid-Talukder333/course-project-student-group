@@ -24,7 +24,7 @@ export default function Courses() {
     <>
       <Box>
         <Container maxWidth="xl">
-          <Schedule courses={loggedUser.courses} onChange={handleSave} />
+          <Schedule noSort={true} courses={loggedUser.courses} onChange={handleSave} />
         </Container>
       </Box>
     </>

@@ -27,8 +27,23 @@ const style = {
   alignItems: "center",
 };
 
-const EditModal = ({ course, onChange, handleToggle }) => {
+const handleTimeStamps = (time) => {
+  let updatedTime = time.replace(" ", "").toLowerCase();
+  if (updatedTime.includes("pm")) {
+    updatedTime = updatedTime.replace("pm", "");
+    updatedTime = parseFloat(updatedTime) + 12;
+    return updatedTime;
+  } else {
+    updatedTime = updatedTime.replace("am", "");
+    updatedTime = parseFloat(updatedTime);
+    return updatedTime;
+  }
+};
+
+const EditModal = ({ courses, course, onChange, handleToggle }) => {
   const [courseTime, setCourseTime] = React.useState(course.time);
+  const [error, setError] = React.useState(false);
+  const [helper, setHelper] = React.useState("");
 
   const handleChange = (e) => {
     setCourseTime(e.target.value);
@@ -37,7 +52,24 @@ const EditModal = ({ course, onChange, handleToggle }) => {
   const handleSave = () => {
     let updatedCourse = { ...course };
     updatedCourse.time = courseTime;
-    onChange(updatedCourse);
+    console.log(courses);
+    let time = handleTimeStamps(courseTime);
+    let errorFound = false;
+    courses.forEach((item) => {
+      if (item.id.toString() !== course.id.toString()) {
+        let courseTime = handleTimeStamps(item.time);
+        if (Math.floor(Math.abs(courseTime - time)) < 1) {
+          setError(true);
+          setHelper(
+            "Wrong time, other courses may have been scheduled in between the time"
+          );
+          errorFound = true;
+        }
+      }
+    });
+    if (!errorFound) {
+      onChange(updatedCourse);
+    }
   };
 
   return (
@@ -59,12 +91,14 @@ const EditModal = ({ course, onChange, handleToggle }) => {
               Class Time:
             </Typography>
             <TextField
+              error={error}
               style={{
                 width: "100%",
                 margin: 10,
               }}
               value={courseTime}
               onChange={(e) => handleChange(e)}
+              helperText={helper}
             />
           </Container>
           <Container

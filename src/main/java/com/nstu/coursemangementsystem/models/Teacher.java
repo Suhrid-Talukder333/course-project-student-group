@@ -3,10 +3,7 @@ package com.nstu.coursemangementsystem.models;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.ElementCollection;
 import javax.persistence.Id;
-
-import java.util.*;
 
 @Entity
 public class Teacher {
@@ -16,8 +13,9 @@ public class Teacher {
     private String name;
     private String email;
     private String password;
-    @ElementCollection
-    private List<Course> courses;
+    private String phone;
+    private String address;
+    private String blood;
 
     public Teacher() {
     }
@@ -38,6 +36,30 @@ public class Teacher {
         this.email = email;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getBlood() {
+        return blood;
+    }
+
+    public void setBlood(String blood) {
+        this.blood = blood;
+    }
+
     public String getName() {
         return name;
     }
@@ -55,11 +77,11 @@ public class Teacher {
         this.password = password;
     }
 
-    public List<Course> getCourses() {
-        return courses;
-    }
+    // public List<Course> getCourses() {
+    //     return courses;
+    // }
 
-    public void setCourses(List<Course> courses) {
-        this.courses = courses;
-    }
+    // public void setCourses(List<Course> courses) {
+    //     this.courses = courses;
+    // }
 }

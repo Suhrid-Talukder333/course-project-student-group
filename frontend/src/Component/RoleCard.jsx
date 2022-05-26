@@ -14,10 +14,25 @@ const StyledCardContent = styled(CardContent)`
   font-size: 20px;
 `
 
-const StyledCard = styled(Card)`
+const StyledCard = styled.div`
+  width: 100px;
+  height: 100px;
+  box-shadow: 3px 6px 20px -3px;
   ${(props) => 
-    props.selected && "border: 2px solid red"
+    props.selected && `
+      width: 150px;
+      height: 150px;
+      box-shadow: 3px 6px 20px -3px;
+    `
   }
+`
+
+const RoleTypeContainer = styled.span`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
 `
 
 export default function RoleCard({
@@ -34,24 +49,14 @@ export default function RoleCard({
     } else {
       setRoleImage(Teacher);
     }
-  },[])
+  },[RoleType.role])
   
   return (
-    <StyledCard sx={{ maxWidth: 345 }} selected={selected} onClick={() => onChange(RoleType)}>
-      <CardActionArea>
-        <CardMedia
-          sx={{
-            borderRadius: `50%`,
-          }}
-          component="img"
-          height="140"
-          image={RoleImage}
-          alt="student"
-        />
-        <StyledCardContent>
-            {RoleType.title}
-        </StyledCardContent>
-      </CardActionArea>
+    <StyledCard selected={selected} onClick={() => onChange(RoleType)}>
+        <img width="100%" height="100%" src={RoleImage} />
+        <RoleTypeContainer>
+          <Typography variant='h5'>{RoleType.role.toUpperCase()}</Typography>
+        </RoleTypeContainer>
     </StyledCard>
   );
 }

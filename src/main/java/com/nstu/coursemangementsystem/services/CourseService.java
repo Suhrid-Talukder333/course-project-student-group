@@ -10,4 +10,5 @@ public interface CourseService {
     public List<Course> getAllCourses();
     public Course getCourseById(int id);
     public void updateCourse(int id, Course course);
+    public void reset();
 }

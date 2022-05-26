@@ -10,7 +10,7 @@ import styled from "styled-components";
 import { Container, TextField } from "@material-ui/core";
 import { Box } from "@mui/material";
 import EditModal from "./EditModal";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const StyledContainer = styled.div`
   display: flex;
@@ -21,7 +21,7 @@ const StyledContainer = styled.div`
   border-radius: 8px;
 `;
 
-const MediaCard = ({ course, onChange }) => {
+const MediaCard = ({ course, onChange, courses, noSort }) => {
   const history = useNavigate();
   const [open, setOpen] = React.useState(false);
   const [status, setStatus] = React.useState(course?.status);
@@ -31,15 +31,15 @@ const MediaCard = ({ course, onChange }) => {
 
   React.useEffect(() => {
     setStatus(course.status);
-  }, [course, status])
-  
+  }, [course, status]);
+
   const showCourse = (e, course) => {
-    e.stopPropagation()
+    e.stopPropagation();
     history(`/course/${course.id}`);
-  }
-    
+  };
+
   const handleAttend = (e) => {
-    e.stopPropagation()
+    e.stopPropagation();
     setStatus("attending");
     let updatedData = { ...course };
     updatedData.status = "attending";
@@ -55,7 +55,7 @@ const MediaCard = ({ course, onChange }) => {
   };
 
   const handleToggle = (e) => {
-    e.stopPropagation();
+    e && e.stopPropagation();
     setOpen(!open);
   };
 
@@ -69,15 +69,16 @@ const MediaCard = ({ course, onChange }) => {
       <Card
         sx={{
           width: 300,
+          height: 350,
           padding: 3,
           border: status && "1px solid #363237",
           margin: 3,
           cursor: "pointer",
           backgroundColor:
             status && status === "attending"
-              ? "#a1be95"
+              ? "#d8fad1"
               : status === "dismissed"
-              ? "#ed5752"
+              ? "#ff7671;"
               : "",
         }}
         onClick={(e) => showCourse(e, course)}
@@ -90,18 +91,28 @@ const MediaCard = ({ course, onChange }) => {
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            CSTE{course.code}
+            {course.code}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {course.name}
           </Typography>
-          <Typography variant="h6" color="text.secondary">
+          {!noSort && <Typography variant="h6" color="text.secondary">
             {course.time}
-          </Typography>
+          </Typography>}
         </CardContent>
-        {userRole === "teacher" && (
-          <CardActions sx={{ display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-            <Button size="small" variant="contained" onClick={(e) => handleToggle(e)}>
+        {userRole === "teacher" && !noSort && (
+          <CardActions
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Button
+              size="small"
+              variant="contained"
+              onClick={(e) => handleToggle(e)}
+            >
               Edit
             </Button>
             {!status && (
@@ -134,6 +145,7 @@ const MediaCard = ({ course, onChange }) => {
       </Card>
       {open && (
         <EditModal
+          courses={courses}
           course={course}
           handleToggle={handleToggle}
           onChange={handleSave}
@@ -156,22 +168,59 @@ const handleTimeStamps = (time) => {
   }
 };
 
-const scheduleSort = (courses) => {
+const scheduleSort = (courses, noSort) => {
   let loggedUser = JSON.parse(window.localStorage.getItem("loggedUser"));
   let updatedData = [...courses];
-  if(loggedUser.role === "student") {
-    updatedData = updatedData.filter(item => {
-      if(item.year.toString() === loggedUser.year.toString() && item.term.toString() === loggedUser.term.toString()) {
+  if (loggedUser.role === "student") {
+    updatedData = updatedData.filter((item) => {
+      if (
+        item.year.toString() === loggedUser.year.toString() &&
+        item.term.toString() === loggedUser.term.toString()
+      ) {
         return item;
       }
-    })
-  } else if(loggedUser.role === "teacher") {
-    updatedData = updatedData.filter(item => {
-      if(item.teacher.toString() === loggedUser.name.toString()) {
+    });
+  } else if (loggedUser.role === "teacher") {
+    updatedData = updatedData.filter((item) => {
+      if (
+        item.teacher.toString().toLowerCase() ===
+        loggedUser.name.toString().toLowerCase()
+      ) {
         return item;
       }
-    })
+    });
   }
+  if (noSort) {
+    var days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    var now = new Date();
+    var day = now.getDay();
+
+    updatedData = updatedData.filter((item) => {
+      let include = false;
+      loggedUser.weekdays.forEach((i) => {
+        console.log(i);
+        console.log(days[day].toLowerCase());
+        if (i.courseName.toLowerCase() == item.name.toLowerCase()) {
+          if (days[day].toLowerCase() == i.day.trim().toLowerCase()) {
+            console.log(i);
+            include = true;
+          }
+        }
+      });
+      if (include) {
+        return item;
+      }
+    });
+  }
+  console.log(updatedData, "asdasd");
   updatedData.sort((a, b) => {
     let timeA = handleTimeStamps(a.time);
     let timeB = handleTimeStamps(b.time);
@@ -180,14 +229,14 @@ const scheduleSort = (courses) => {
   return updatedData;
 };
 
-export default function Schedule({ courses, onChange }) {
+export default function Schedule({ courses, onChange, noSort = false }) {
   const [scheduledCourses, setScheduledCourses] = React.useState(
     scheduleSort(courses)
   );
 
   React.useEffect(() => {
-    setScheduledCourses(scheduleSort(courses))
-  }, [courses])
+    setScheduledCourses(scheduleSort(courses, noSort));
+  }, [courses, noSort]);
 
   const postCourse = async (course) => {
     await fetch(`http://localhost:8080/course/update/${course.id}`, {
@@ -208,16 +257,23 @@ export default function Schedule({ courses, onChange }) {
         }
         return item;
       });
-      setScheduledCourses(scheduleSort(updatedCourses));
+      setScheduledCourses(scheduleSort(updatedCourses, noSort));
       onChange("courses", updatedCourses);
     });
   };
 
   return (
     <StyledContainer>
-      {scheduledCourses.map((course) => (
-        <MediaCard course={course} key={course.id} onChange={handleChange} />
-      ))}
+      {scheduledCourses &&
+        scheduledCourses.map((course) => (
+          <MediaCard
+            courses={scheduledCourses}
+            course={course}
+            key={course.id}
+            onChange={handleChange}
+            noSort={noSort}
+          />
+        ))}
     </StyledContainer>
   );
 }

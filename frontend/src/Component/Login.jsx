@@ -44,11 +44,14 @@ export default function Login() {
   const [role, setRole] = useState({ role: "student", title: "Student" });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
   const [students, setStudents] = useState([]);
   const [teachers, setTeachers] = useState([]);
   const [courses, setCourses] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
   const [resources, setResources] = useState([]);
+  const [weekdays, setWeekdays] = useState([]);
 
   const history = useNavigate();
 
@@ -71,6 +74,8 @@ export default function Login() {
       students.forEach((item) => {
         if (item.email === email && item.password === password) {
           authenticated = true;
+          setPasswordError(false);
+          setEmailError(false);
           let user = { ...item };
           user.role = "student";
           let updatedCourses = [...courses];
@@ -90,16 +95,22 @@ export default function Login() {
             return item;
           })
           user.courses = updatedCourses;
+          user.weekdays = weekdays;
           window.localStorage.setItem("loggedUser", JSON.stringify(user));
-        }
+        } 
       });
       if (authenticated) {
         history(`/studentProfile/`);
+      } else {
+        setPasswordError(true);
+        setEmailError(true);
       }
     } else {
       let authenticated = false;
       teachers.forEach((item) => {
         if (item.email === email && item.password === password) {
+          setPasswordError(false);
+          setEmailError(false);
           authenticated = true;
           let user = { ...item };
           user.role = "teacher";
@@ -120,11 +131,15 @@ export default function Login() {
             return item;
           })
           user.courses = updatedCourses;
+          user.weekdays = weekdays;
           window.localStorage.setItem("loggedUser", JSON.stringify(user));
         }
       });
       if (authenticated) {
         history(`/teacherProfile/`);
+      } else {
+        setPasswordError(true);
+        setEmailError(true);
       }
     }
   };
@@ -155,6 +170,11 @@ export default function Login() {
       .then((result) => {
         setResources(result);
       });
+    fetch("http://localhost:8080/weekdays/getAll")
+      .then((res) => res.json())
+      .then((result) => {
+        setWeekdays(result);
+      })
   }, []);
 
   return (
@@ -170,7 +190,7 @@ export default function Login() {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            background: "#90afc5",
+            background: "#c9cbcc",
           }}
         >
           <ImgContainer>
@@ -199,6 +219,7 @@ export default function Login() {
                 width: "100%",
                 margin: "20px",
                 display: "flex",
+                padding: 5,
                 justifyContent: "space-around",
                 alignItems: "center",
               }}
@@ -221,6 +242,7 @@ export default function Login() {
               sx={{ mt: 1 }}
             >
               <TextField
+                error={emailError}
                 margin="normal"
                 required
                 fullWidth
@@ -230,9 +252,11 @@ export default function Login() {
                 value={email}
                 autoComplete="email"
                 autoFocus
+                helperText="Incorrect entry."
                 onChange={handleEmailChange}
               />
               <TextField
+                error={passwordError}
                 margin="normal"
                 required
                 fullWidth
@@ -242,6 +266,7 @@ export default function Login() {
                 value={password}
                 id="password"
                 autoComplete="current-password"
+                helperText="Incorrect entry."
                 onChange={handlePasswordChange}
               />
               <Button

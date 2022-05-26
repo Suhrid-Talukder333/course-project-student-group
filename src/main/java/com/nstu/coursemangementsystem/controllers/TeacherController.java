@@ -24,4 +24,14 @@ public class TeacherController {
     public List<Teacher> list(){
         return teacherService.getAllTeachers();
     }
+
+    @GetMapping("/get/{id}")
+    public Teacher getById(@PathVariable int id) {
+        return teacherService.getTeacherById(id);
+    }
+
+    @PostMapping("/update/{id}")
+    public void updateById(@PathVariable int id, @RequestBody Teacher teacher) {
+        teacherService.updateTeacher(id, teacher);
+    }
 }

@@ -8,7 +8,7 @@ const navConfigTeacher = [
     icon: getIcon('eva:pie-chart-2-fill'),
   },
   {
-    title: 'Students',
+    title: 'Users',
     path: '/users',
     icon: getIcon('eva:people-fill'),
   },
@@ -16,6 +16,11 @@ const navConfigTeacher = [
     title: 'Courses',
     path: '/courses',
     icon: getIcon('eva:shopping-bag-fill'),
+  },
+  {
+    title: 'Profile',
+    path: '/profile',
+    icon: getIcon('eva:person-fill'),
   },
 ];
 
@@ -26,7 +31,7 @@ const navConfigStudent = [
     icon: getIcon('eva:pie-chart-2-fill'),
   },
   {
-    title: 'Teachers',
+    title: 'Users',
     path: '/users',
     icon: getIcon('eva:people-fill'),
   },
@@ -34,6 +39,11 @@ const navConfigStudent = [
     title: 'Courses',
     path: '/courses',
     icon: getIcon('eva:shopping-bag-fill'),
+  },
+  {
+    title: 'Profile',
+    path: '/profile',
+    icon: getIcon('eva:person-fill'),
   },
 ];
 

@@ -16,6 +16,9 @@ public class Student {
     private String term;
     private String roll;
     private String email;
+    private String phone;
+    private String address;
+    private String blood;
 
     public Student() {
     }
@@ -26,6 +29,30 @@ public class Student {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getBlood() {
+        return blood;
+    }
+
+    public void setBlood(String blood) {
+        this.blood = blood;
     }
 
     public String getPassword() {

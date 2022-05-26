@@ -22,4 +22,22 @@ public class TeacherServiceImplement implements TeacherService {
     public List<Teacher> getAllTeachers() {
         return TeacherRepository.findAll();
     }
+
+    @Override
+    public Teacher getTeacherById(int id) {
+        return TeacherRepository.getWithId(id);
+    }
+
+    @Override
+    public void updateTeacher(int id, Teacher teacher) {
+        Teacher c = TeacherRepository.getWithId(id);
+        c.setName(teacher.getName());
+        c.setAddress(teacher.getAddress());
+        c.setBlood(teacher.getBlood());
+        c.setEmail(teacher.getEmail());
+        c.setPassword(teacher.getPassword());
+        c.setPhone(teacher.getPhone());
+
+        TeacherRepository.save(c);
+    }
 }
