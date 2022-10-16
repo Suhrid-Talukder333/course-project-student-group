@@ -104,7 +104,7 @@ export default function User() {
       students.map((item) => {
         return {
           id: item.id,
-          avatarUrl: "https://randomuser.me/api/portraits/lego/1.jpg",
+          avatarUrl: "https://www.svgrepo.com/show/27220/avatar.svg",
           name: item.name,
           role: "Student",
           status: "Active",
@@ -115,7 +115,7 @@ export default function User() {
       teachers.map((item) => {
         return {
           id: item.id,
-          avatarUrl: "https://randomuser.me/api/portraits/lego/1.jpg",
+          avatarUrl: "https://www.svgrepo.com/show/27220/avatar.svg",
           name: item.name,
           role: "Teacher",
           status: "Active",

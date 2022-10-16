@@ -75,7 +75,7 @@ const MediaCard = ({ course, onChange, courses, noSort }) => {
           margin: 3,
           cursor: "pointer",
           backgroundColor:
-            status && status === "attending"
+            status && !noSort && status === "attending"
               ? "#d8fad1"
               : status === "dismissed"
               ? "#ff7671;"
@@ -206,10 +206,8 @@ const scheduleSort = (courses, noSort) => {
     updatedData = updatedData.filter((item) => {
       let include = false;
       loggedUser.weekdays.forEach((i) => {
-        console.log(i);
-        console.log(days[day].toLowerCase());
-        if (i.courseName.toLowerCase() == item.name.toLowerCase()) {
-          if (days[day].toLowerCase() == i.day.trim().toLowerCase()) {
+        if (i.courseName.trim().toLowerCase() == item.name.trim().toLowerCase()) {
+          if (days[day].trim().toLowerCase() == i.day.trim().toLowerCase()) {
             console.log(i);
             include = true;
           }
@@ -220,7 +218,6 @@ const scheduleSort = (courses, noSort) => {
       }
     });
   }
-  console.log(updatedData, "asdasd");
   updatedData.sort((a, b) => {
     let timeA = handleTimeStamps(a.time);
     let timeB = handleTimeStamps(b.time);

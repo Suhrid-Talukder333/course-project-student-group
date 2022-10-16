@@ -282,7 +282,7 @@ const CourseDetails = () => {
           </CourseLabel>
           <CourseLabel>
             <Label>Course Code: </Label>
-            <Info>CSTE{course.code}</Info>
+            <Info>{course.code}</Info>
           </CourseLabel>
           <CourseLabel>
             <Label>Course Time: </Label>

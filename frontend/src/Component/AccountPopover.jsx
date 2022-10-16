@@ -52,7 +52,7 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <Avatar src={"https://randomuser.me/api/portraits/lego/1.jpg"} alt="photoURL" />
+        <Avatar src={"https://www.svgrepo.com/show/27220/avatar.svg"} alt="photoURL" />
       </IconButton>
 
       <MenuPopover

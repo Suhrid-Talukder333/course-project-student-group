@@ -47,7 +47,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none" component={RouterLink} to="#">
           <AccountStyle>
-            <Avatar src={"https://randomuser.me/api/portraits/lego/1.jpg"} alt="photoURL" />
+            <Avatar src={"https://www.svgrepo.com/show/27220/avatar.svg"} alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
                 {loggedUser.name}

@@ -20,7 +20,7 @@ const AccountProfile = ({ user }) => {
           }}
         >
           <Avatar
-            src={"https://randomuser.me/api/portraits/lego/1.jpg"}
+            src={"https://www.svgrepo.com/show/27220/avatar.svg"}
             sx={{
               height: 64,
               mb: 2,

@@ -52,6 +52,7 @@ export default function Login() {
   const [announcements, setAnnouncements] = useState([]);
   const [resources, setResources] = useState([]);
   const [weekdays, setWeekdays] = useState([]);
+  const [helper, setHelper] = useState("");
 
   const history = useNavigate();
 
@@ -104,6 +105,7 @@ export default function Login() {
       } else {
         setPasswordError(true);
         setEmailError(true);
+        setHelper("Invalid entry");
       }
     } else {
       let authenticated = false;
@@ -140,6 +142,7 @@ export default function Login() {
       } else {
         setPasswordError(true);
         setEmailError(true);
+        setHelper("Invalid entry");
       }
     }
   };
@@ -252,7 +255,7 @@ export default function Login() {
                 value={email}
                 autoComplete="email"
                 autoFocus
-                helperText="Incorrect entry."
+                helperText={helper}
                 onChange={handleEmailChange}
               />
               <TextField
@@ -266,8 +269,8 @@ export default function Login() {
                 value={password}
                 id="password"
                 autoComplete="current-password"
-                helperText="Incorrect entry."
                 onChange={handlePasswordChange}
+                helperText={helper}
               />
               <Button
                 type="submit"
